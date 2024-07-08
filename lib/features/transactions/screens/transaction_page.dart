@@ -1,4 +1,7 @@
 import 'package:apk/common/styles/boxshadow.dart';
+import 'package:apk/data/repositories/currency_repository.dart';
+import 'package:apk/data/services/currency_services.dart';
+import 'package:apk/features/crypto/screen/page.dart';
 import 'package:apk/features/onboarding/screens/onboarding_page.dart';
 import 'package:apk/features/profile/screens/page.dart';
 import 'package:apk/features/transactions/controller/transaction_controller.dart';
@@ -10,52 +13,29 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 class TransactionPage extends StatelessWidget {
-  const TransactionPage({Key? key}) : super(key: key);
-
+  TransactionPage({Key? key}) : super(key: key);
+  final CurrencyRepository _repository = CurrencyApiService();
+  final List<Widget> screens = [
+    TransactionScreen(),
+    CryptoPage(),
+    Container(),
+    Container(),
+    ProfilePage()
+  ];
   @override
   Widget build(BuildContext context) {
+    final TransactionController value = Get.put(TransactionController());
+
+    print(value.index);
+
     return Scaffold(
       extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        toolbarHeight: 100.h,
-        leading: Container(
-          padding: EdgeInsets.only(left: 24.w),
-          alignment: Alignment.center,
-          child: Image.asset(
-            KImageConstant.scanIcon,
-            height: 24.w,
-            width: 24.h,
-            fit: BoxFit.cover,
-          ),
+      body: Container(
+        child: GetBuilder(
+          init: TransactionController(),
+          builder: (controller) => screens[controller.index.toInt()],
         ),
-        actions: [
-          Container(
-            alignment: Alignment.center,
-            child: Image.asset(
-              KImageConstant.groupIcon,
-              height: 24.w,
-              width: 24.h,
-              fit: BoxFit.cover,
-            ),
-          ),
-          SizedBox(
-            width: 24.w,
-          ),
-          Container(
-            alignment: Alignment.center,
-            child: Image.asset(
-              KImageConstant.notificationIcon,
-              height: 24.w,
-              width: 24.h,
-              fit: BoxFit.cover,
-            ),
-          ),
-          SizedBox(
-            width: 24.w,
-          ),
-        ],
       ),
-      body: TransactionScreen(),
       bottomNavigationBar: GetBuilder<TransactionController>(
           init: TransactionController(),
           builder: (controller) {

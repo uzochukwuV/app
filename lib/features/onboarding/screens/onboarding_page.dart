@@ -1,3 +1,5 @@
+import 'package:apk/data/services/firebase_auth.dart';
+import 'package:apk/features/authentication/screens/login.dart';
 import 'package:apk/features/transactions/screens/transaction_page.dart';
 import 'package:apk/utils/constants/colors.dart';
 import 'package:apk/utils/constants/images.dart';
@@ -45,7 +47,7 @@ class OnboardingPage extends StatelessWidget {
             ),
             ElevatedButton(
                 onPressed: () {
-                  Get.to(() => TransactionPage());
+                  Get.to(() => AuthWrapper());
                 },
                 child: Text("GET STARTED"),
                 style: ButtonStyle().copyWith(
@@ -54,20 +56,46 @@ class OnboardingPage extends StatelessWidget {
             SizedBox(
               height: 32.h,
             ),
-            RichText(
-                text: TextSpan(
-                    text: "Already have an account?",
-                    style: TextStyle().copyWith(
-                        fontWeight: FontWeight.w600,
-                        color: Get.isDarkMode ? Colors.white : Colors.black),
-                    children: [
-                  TextSpan(
-                      text: " Log in",
-                      style: TextStyle()
-                          .copyWith(color: KColorsConstant.primaryColor))
-                ]))
+            GestureDetector(
+              onTap: () => Get.to(() => EmailPasswordLogin()),
+              child: RichText(
+                  text: TextSpan(
+                      text: "Already have an account?",
+                      style: TextStyle().copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: Get.isDarkMode ? Colors.white : Colors.black),
+                      children: [
+                    TextSpan(
+                        text: " Log in",
+                        style: TextStyle()
+                            .copyWith(color: KColorsConstant.primaryColor))
+                  ])),
+            )
           ],
         ),
+      ),
+    );
+  }
+}
+
+class AuthWrapper extends StatelessWidget {
+  const AuthWrapper({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: StreamBuilder(
+        stream: AppController.authMethods.authState,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return CircularProgressIndicator();
+          }
+
+          if (snapshot.hasData) {
+            return TransactionPage();
+          }
+          return EmailPasswordLogin();
+        },
       ),
     );
   }

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class VirtualCardCustomPath extends CustomClipper<Path> {
   @override
   Path getClip(size) {
-    Path path = new Path();
+    Path path = Path();
     path.moveTo(0, size.height * 0.3);
     path.lineTo(0, size.height - 12);
     path.quadraticBezierTo(2, size.height - 1, 12, size.height);
@@ -11,8 +11,9 @@ class VirtualCardCustomPath extends CustomClipper<Path> {
     path.lineTo(size.width - 12, size.height);
     path.quadraticBezierTo(
         size.width - 1, size.height - 2, size.width, size.height - 12);
+
     path.cubicTo(size.width * 0.75, size.height * 0.4, size.width * 0.33,
-        size.height * 0.15, 0, size.height * 0.33);
+        size.height * 0.15, 0, size.height * 0.3);
 
     return path;
   }
